@@ -40,7 +40,9 @@ The local sandbox required a writable `--basetemp` directory for Pytest; normal 
 
 ## CI and remaining limits
 
-The [CI workflow](../.github/workflows/ci.yml) has backend, frontend, MCP, PostgreSQL API, and container jobs. See the [GitHub run history](https://github.com/muresaijaideepreddy/relayops-fde/actions/workflows/ci.yml) for the status of a specific revision. Docker and PostgreSQL were not available on the local Windows machine; their execution is verified separately by CI when a successful run is recorded.
+All five jobs passed in [GitHub Actions run 36255539724](https://github.com/muresaijaideepreddy/relayops-fde/actions/runs/36255539724) for implementation commit `46090ad216cb5cc7a9180c65c045326fb739f60a`: Python tests/evaluation, TypeScript tests/build, MCP protocol tests, PostgreSQL API integration, and container build/end-to-end smoke. The container job also verified the bundled frontend.
+
+Docker and PostgreSQL were unavailable on the local Windows machine; the successful Linux CI jobs provide their execution evidence. Later documentation-only commits record these results. See the [GitHub run history](https://github.com/muresaijaideepreddy/relayops-fde/actions/workflows/ci.yml) for the status of subsequent revisions.
 
 No live OpenAI request was made. The optional provider adapter is covered with mocked responses for structured-output validation, refusals/incomplete responses, unexpected citation IDs, and sanitized provider failures. The deterministic evaluation is a small fixture regression suite using the bundled synthetic policies. It is not a held-out model quality benchmark, adversarial robustness assessment, load test, or a business efficiency measurement. Latencies in the saved baseline come from one local run and are not an SLA.
 

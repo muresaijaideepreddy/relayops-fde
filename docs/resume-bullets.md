@@ -16,7 +16,7 @@ Choose three or four bullets to fit the role:
 - Added approval and rejection handling for simulated CRM notes, with persisted action results and conflict detection to support repeatable decision requests.
 - Created repeatable offline evaluations and API tests for workflow behavior, tenant isolation, and action decisions; documented the distinction between regression checks and live-model quality evaluation.
 - Validated the application with 102 automated tests across backend, frontend, and MCP suites, achieving 96% backend statement coverage and passing eight deterministic retrieval/escalation regression scenarios.
-- Packaged the application with Docker Compose and SQLite/PostgreSQL configuration paths, and added CI definitions for backend, frontend, database, and container checks.
+- Packaged the application with Docker Compose and validated PostgreSQL integration and the built container through five passing GitHub Actions jobs covering backend, frontend, MCP, database, and container checks.
 - Implemented four read-only MCP tools for tenant-scoped ticket, evidence, and metrics access; verified structured responses, input validation, and the stdio subprocess handshake with the official Python SDK.
 - Produced a fictional customer discovery brief, architecture trade-offs, pilot acceptance criteria, and an operational runbook to demonstrate the delivery and handoff work around an FDE engagement.
 
@@ -27,7 +27,7 @@ Choose three or four bullets to fit the role:
 
 ## Skills to list accurately
 
-The implemented scope supports discussion of Python, TypeScript, React, FastAPI, REST API design, Pydantic validation, SQLAlchemy, SQLite, tenant isolation, lexical retrieval, structured AI output, MCP tools, human review workflows, idempotency, automated testing, and technical documentation. Describe PostgreSQL as a configurable database path unless you have run and validated it. Describe the OpenAI path as an integration implementation unless you have separately tested it against the live API.
+The implemented scope supports discussion of Python, TypeScript, React, FastAPI, REST API design, Pydantic validation, SQLAlchemy, SQLite/PostgreSQL, tenant isolation, lexical retrieval, structured AI output, MCP tools, human review workflows, idempotency, automated testing, and technical documentation. PostgreSQL and Docker were verified by the CI smoke tests linked in validation. Describe the OpenAI path as an integration implementation unless you have separately tested it against the live API.
 
 Use [validation](validation.md) to add only verified facts such as a test count or measured local runtime. A local test pass rate is not model accuracy, customer satisfaction, or productivity improvement.
 
