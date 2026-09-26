@@ -1,0 +1,25 @@
+# Local PostgreSQL demonstration; demo database credentials are not production secrets.
+# docker compose -f compose.yaml -f compose.postgres.yaml up --build
+services:
+  relayops:
+    environment:
+      DATABASE_URL: postgresql+psycopg://relayops:relayops-demo@postgres:5432/relayops
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: relayops
+      POSTGRES_PASSWORD: relayops-demo
+      POSTGRES_DB: relayops
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U relayops -d relayops"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:

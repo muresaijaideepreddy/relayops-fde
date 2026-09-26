@@ -1,0 +1,15 @@
+services:
+  relayops:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DEMO_MODE: "true"
+      AI_PROVIDER: demo
+      DATABASE_URL: sqlite:////app/data/relayops.db
+    volumes:
+      - relayops-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  relayops-data:

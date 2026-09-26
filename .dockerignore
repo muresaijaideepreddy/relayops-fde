@@ -1,0 +1,15 @@
+.git
+.env
+.env.*
+.venv
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+**/dist
+**/*.db
+**/*.db-*
+**/*.sqlite*
+**/*.log
+data
+docs
+tests

@@ -1,0 +1,7 @@
+# Runtime dependencies pinned to the versions used for validation.
+fastapi==0.141.1
+uvicorn==0.54.0
+SQLAlchemy==2.1.1
+pydantic==2.13.5
+openai==3.19.2
+psycopg[binary]==3.3.6
