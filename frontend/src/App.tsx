@@ -16,7 +16,6 @@ import {
   FileJson,
   FlaskConical,
   Inbox,
-  Layers3,
   LoaderCircle,
   LockKeyhole,
   Plus,
@@ -286,7 +285,7 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <header className="console-header">
         <a
           className="brand"
           href="#"
@@ -297,21 +296,23 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
           aria-label="RelayOps home"
         >
           <span className="brand-mark">
-            <Workflow size={23} />
+            <Workflow size={24} />
           </span>
-          relay<span>ops</span>
-          <span className="brand-dot" />
+          <span>
+            relayops<span className="brand-dot">/</span>
+          </span>
         </a>
-        <div className="side-label">OPERATIONS</div>
         <nav aria-label="Main navigation">
-          {nav.map((item) => (
+          {nav.map((item, index) => (
             <button
               key={item.id}
               className={`nav-item ${view === item.id ? 'active' : ''}`}
               aria-current={view === item.id ? 'page' : undefined}
               onClick={() => setView(item.id)}
             >
-              <item.icon size={18} />
+              <span className="nav-index" aria-hidden="true">
+                0{index + 1}
+              </span>
               <span>{item.name}</span>
               {item.id === 'approvals' && pending > 0 && (
                 <span className="nav-count">{pending}</span>
@@ -319,72 +320,44 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
             </button>
           ))}
         </nav>
-        <div className="sidebar-bottom">
-          <div className="safety-card">
-            <ShieldCheck size={21} />
-            <strong>Built for human judgment</strong>
-            <p>Evidence first. Every action reviewed. Every decision traced.</p>
-            <span>
-              <span className="status-dot" />
-              Tenant-scoped by design
-            </span>
-          </div>
-          <button className="profile" onClick={onSwitch}>
-            <span className="profile-avatar">RO</span>
-            <span>
-              <strong>Demo operator</strong>
-              <small>Switch workspace</small>
-            </span>
-            <ChevronDown size={16} />
+        <div className="console-identity">
+          <span className="mode-pill">
+            <span className="status-dot" />
+            {data?.workspace.mode === 'demo'
+              ? 'OFFLINE DEMO'
+              : data
+                ? `${data.workspace.mode.toUpperCase()} MODE`
+                : 'CONNECTING'}
+          </span>
+          <button className="workspace-switch" onClick={onSwitch}>
+            <span className="tiny-avatar">{data?.workspace.tenant.name.slice(0, 1) || 'W'}</span>
+            <span>{data?.workspace.tenant.name || 'Choose workspace'}</span>
+            <ChevronDown size={14} />
           </button>
         </div>
-      </aside>
+      </header>
       <div className="main-shell">
-        <header className="topbar">
-          <div className="breadcrumb">
-            <Layers3 size={16} />
-            <span>Operations</span>
-            <ChevronRight size={13} />
-            <strong>{nav.find((item) => item.id === view)?.name}</strong>
-          </div>
-          <div className="topbar-right">
-            <span className="mode-pill">
-              <span className="status-dot" />
-              {data?.workspace.mode === 'demo'
-                ? 'Offline demo'
-                : data
-                  ? `${data.workspace.mode} mode`
-                  : 'Connecting'}
-            </span>
-            <button className="workspace-switch" onClick={onSwitch}>
-              <span className="tiny-avatar">{data?.workspace.tenant.name.slice(0, 1) || 'W'}</span>
-              <span>{data?.workspace.tenant.name || 'Choose workspace'}</span>
-              <ChevronDown size={14} />
-            </button>
-          </div>
-        </header>
         <main id="main-content">
           <div className="page-heading">
             <div>
               <div className="eyebrow">
-                SUPPORT OPERATIONS /{' '}
-                {view === 'workspace' ? 'WORKSPACE' : label(view).toUpperCase()}
+                OPERATOR CONSOLE / {view === 'workspace' ? 'WORKSPACE' : label(view).toUpperCase()}
               </div>
               <h1>
                 {
                   {
-                    workspace: 'Your queue, in focus.',
-                    approvals: 'Keep people in the loop.',
-                    knowledge: 'Give every answer a source.',
-                    evaluations: 'Confidence, measured.',
-                    audit: 'Every decision leaves a trail.',
+                    workspace: 'Resolve with evidence.',
+                    approvals: 'The decision is yours.',
+                    knowledge: 'The source of the answer.',
+                    evaluations: 'Prove the behavior.',
+                    audit: 'Nothing behind the curtain.',
                   }[view]
                 }
               </h1>
               <p>
                 {
                   {
-                    workspace: 'Turn customer context into grounded answers and reviewed actions.',
+                    workspace: 'Customer context. Verifiable sources. A human at the controls.',
                     approvals:
                       'Review the proposed action before anything reaches the simulated CRM.',
                     knowledge: 'A tenant-scoped source of truth for grounded ticket analysis.',
@@ -497,13 +470,13 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                       icon={<Sparkles size={19} />}
                       name="Analyzed"
                       value={data.metrics.analyzed_tickets}
-                      note="Grounded in workspace knowledge"
+                      note="Tickets with saved analysis"
                     />
                     <Metric
                       icon={<ShieldCheck size={19} />}
                       name="Needs approval"
                       value={data.metrics.pending_approvals}
-                      note="You have the final say"
+                      note="Operator decision required"
                       accent="amber"
                     />
                     <Metric
@@ -514,29 +487,28 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                       accent="teal"
                     />
                   </div>
-                  <div className="workflow-banner">
-                    <span className="workflow-symbol">
-                      <Workflow size={20} />
+                  <div className="desk-rule">
+                    <span>
+                      <span className="status-dot" /> DISPATCH WORKSPACE
                     </span>
-                    <div>
-                      <strong>Context in. Confidence out.</strong>
-                      <span>Retrieve evidence, review the answer, approve the next step.</span>
-                    </div>
-                    <div className="pipeline">
-                      <span>Ingest</span>
-                      <ChevronRight size={13} />
-                      <span>Ground</span>
-                      <ChevronRight size={13} />
-                      <span>Review</span>
-                      <ChevronRight size={13} />
-                      <span>Act</span>
-                    </div>
+                    <span className="desk-metadata">
+                      <span>
+                        <BookOpen size={14} /> {data.documents.length} knowledge sources
+                      </span>
+                      <span className="rule-divider" aria-hidden="true">
+                        /
+                      </span>
+                      <span>
+                        <LockKeyhole size={13} /> Tenant isolated
+                      </span>
+                    </span>
                   </div>
                   <div className="workbench-grid">
                     <section className="panel queue-panel">
                       <div className="panel-heading">
                         <h2>
-                          Ticket queue <span className="count">{data.tickets.length}</span>
+                          <span className="panel-number">01</span> Ticket queue{' '}
+                          <span className="count">{data.tickets.length}</span>
                         </h2>
                         <span className="subtle-label">TENANT SCOPED</span>
                       </div>
@@ -622,7 +594,9 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                         <>
                           <div className="detail-top">
                             <div>
-                              <span className="eyebrow">TICKET INTELLIGENCE</span>
+                              <span className="eyebrow">
+                                <span className="panel-number">02</span> CASE FILE
+                              </span>
                               <div className="detail-id">
                                 {selected.external_id}
                                 <span className={`badge ${selected.priority}`}>
@@ -630,9 +604,25 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                                 </span>
                               </div>
                             </div>
-                            <span className="intelligence-icon">
-                              <Sparkles size={21} />
-                            </span>
+                            <button
+                              className="button primary"
+                              disabled={!!busy || analysisLoading}
+                              onClick={() => {
+                                void analyze();
+                              }}
+                            >
+                              {busy === 'analyze' ? (
+                                <LoaderCircle size={15} className="spin" />
+                              ) : (
+                                <Sparkles size={15} />
+                              )}
+                              {busy === 'analyze'
+                                ? 'Analyzing…'
+                                : analysis
+                                  ? 'Reanalyze ticket'
+                                  : 'Analyze ticket'}
+                              {busy !== 'analyze' && <ArrowRight size={15} />}
+                            </button>
                           </div>
                           <h2 className="detail-title">{selected.title}</h2>
                           <div className="detail-person">
@@ -681,7 +671,7 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                             ))}
                           </div>
                           <div
-                            className="detail-body"
+                            className={`detail-body ${tab === 'overview' ? 'overview-layout' : ''}`}
                             role="tabpanel"
                             id={`panel-${tab}`}
                             aria-labelledby={`tab-${tab}`}
@@ -698,101 +688,181 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                               </div>
                             ) : tab === 'overview' ? (
                               <>
-                                <div className="section-kicker">
-                                  <span className="section-dot" />
-                                  CUSTOMER CONTEXT
-                                </div>
-                                <p className="ticket-body">{selected.body}</p>
-                                {analysis ? (
-                                  <>
-                                    <div className="analysis-header">
-                                      <h3>
-                                        <Sparkles size={16} />
-                                        Analysis
-                                      </h3>
-                                      <span className="tag teal">
-                                        {analysis.provider === 'demo'
-                                          ? 'Deterministic demo'
-                                          : label(analysis.provider)}
-                                      </span>
-                                    </div>
-                                    <p className="analysis-summary">{analysis.summary}</p>
-                                    <div className="signal-row">
-                                      <span title="Heuristic score; not a calibrated probability of correctness.">
-                                        <ShieldCheck size={14} />
-                                        {pct(analysis.confidence)} heuristic confidence
-                                      </span>
-                                      <span className={`risk-${analysis.risk}`}>
-                                        {analysis.risk} risk
-                                      </span>
-                                      <span>
-                                        <Clock3 size={13} />
-                                        {Math.round(analysis.latency_ms)} ms
-                                      </span>
-                                    </div>
-                                    {analysis.needs_escalation && (
-                                      <div className="escalation">
-                                        <TriangleAlert size={16} />
-                                        Human escalation recommended
-                                      </div>
-                                    )}
-                                    <div className="recommendation">
-                                      <div className="section-kicker">RECOMMENDED NEXT STEP</div>
-                                      <p>{analysis.recommended_action}</p>
-                                    </div>
-                                    <div className="draft-card">
-                                      <div className="draft-heading">
-                                        <h3>Suggested reply</h3>
-                                        <span className="tag">Draft only</span>
-                                      </div>
-                                      <p>{analysis.draft_reply}</p>
-                                    </div>
-                                    {selectedAction && (
-                                      <div className="approval-inline">
-                                        <div>
-                                          <ShieldCheck size={16} />
-                                          <strong>
-                                            {selectedAction.status === 'pending'
-                                              ? 'Ready for your review'
-                                              : `Action ${selectedAction.status}`}
-                                          </strong>
-                                        </div>
-                                        <p>
-                                          {selectedAction.status === 'pending'
-                                            ? 'Approval saves a local simulated CRM note. It does not send this reply to the customer.'
-                                            : 'See Approvals for the saved decision and connector result.'}
-                                        </p>
-                                        <button
-                                          className="button secondary full"
-                                          onClick={() => setView('approvals')}
-                                        >
-                                          Review proposed action <ArrowRight size={15} />
-                                        </button>
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
-                                  <div className="analysis-empty">
-                                    <span className="analysis-empty-icon">
-                                      <Sparkles size={24} />
-                                    </span>
-                                    <h3>Good answers start with evidence.</h3>
-                                    <p>
-                                      Analyze this ticket to retrieve relevant knowledge, assess
-                                      risk, and prepare a reviewable next step.
-                                    </p>
-                                    <div className="analysis-guarantees">
-                                      <span>
-                                        <Check size={13} />
-                                        Tenant-scoped sources
-                                      </span>
-                                      <span>
-                                        <Check size={13} />
-                                        Human approval
-                                      </span>
-                                    </div>
+                                <aside className="context-rail">
+                                  <div className="context-heading">
+                                    <span className="section-kicker">THE REQUEST</span>
+                                    <TicketIcon size={15} />
                                   </div>
-                                )}
+                                  <p className="ticket-body">{selected.body}</p>
+                                  <div className="source-ledger">
+                                    <div className="context-heading">
+                                      <span className="section-kicker">
+                                        {analysis ? 'CITED EVIDENCE' : 'WORKSPACE KNOWLEDGE'}
+                                      </span>
+                                      <span className="count">
+                                        {analysis
+                                          ? analysis.citations.length
+                                          : data.documents.length}
+                                      </span>
+                                    </div>
+                                    {analysis ? (
+                                      analysis.citations.length ? (
+                                        analysis.citations.map((citation, index) => (
+                                          <button
+                                            className="source-reference"
+                                            key={`${citation.document_id}-${index}`}
+                                            onClick={() => setTab('evidence')}
+                                          >
+                                            <span className="source-number">
+                                              {String(index + 1).padStart(2, '0')}
+                                            </span>
+                                            <span>{citation.title}</span>
+                                            <ArrowUpRight size={14} />
+                                          </button>
+                                        ))
+                                      ) : (
+                                        <p className="source-note">
+                                          No source retrieved. Review this as an ungrounded
+                                          analysis.
+                                        </p>
+                                      )
+                                    ) : (
+                                      <>
+                                        <p className="source-note">
+                                          Available to retrieval. Analyze the ticket to identify
+                                          supporting evidence.
+                                        </p>
+                                        {data.documents.slice(0, 3).map((document, index) => (
+                                          <button
+                                            className="source-reference"
+                                            key={document.id}
+                                            onClick={() => setView('knowledge')}
+                                          >
+                                            <span className="source-number">
+                                              {String(index + 1).padStart(2, '0')}
+                                            </span>
+                                            <span>{document.title}</span>
+                                            <ArrowUpRight size={14} />
+                                          </button>
+                                        ))}
+                                      </>
+                                    )}
+                                  </div>
+                                  <div className="context-boundary">
+                                    <LockKeyhole size={14} />
+                                    <span>
+                                      {data.workspace.tenant.name}
+                                      <small>Knowledge stays in this workspace.</small>
+                                    </span>
+                                  </div>
+                                </aside>
+                                <div className="analysis-canvas">
+                                  {analysis ? (
+                                    <>
+                                      <div className="analysis-header">
+                                        <h3>
+                                          <Sparkles size={16} />
+                                          Operator brief
+                                        </h3>
+                                        <span className="tag teal">
+                                          {analysis.provider === 'demo'
+                                            ? 'Deterministic demo'
+                                            : label(analysis.provider)}
+                                        </span>
+                                      </div>
+                                      <p className="analysis-summary">{analysis.summary}</p>
+                                      <div className="signal-row">
+                                        <span title="Heuristic score; not a calibrated probability of correctness.">
+                                          <ShieldCheck size={14} />
+                                          {pct(analysis.confidence)} heuristic confidence
+                                        </span>
+                                        <span className={`risk-${analysis.risk}`}>
+                                          {analysis.risk} risk
+                                        </span>
+                                        <span>
+                                          <Clock3 size={13} />
+                                          {Math.round(analysis.latency_ms)} ms
+                                        </span>
+                                      </div>
+                                      {analysis.needs_escalation && (
+                                        <div className="escalation">
+                                          <TriangleAlert size={16} />
+                                          Human escalation recommended
+                                        </div>
+                                      )}
+                                      <div className="recommendation">
+                                        <div className="section-kicker">RECOMMENDED NEXT STEP</div>
+                                        <p>{analysis.recommended_action}</p>
+                                      </div>
+                                      <div className="draft-card">
+                                        <div className="draft-heading">
+                                          <h3>Suggested reply</h3>
+                                          <span className="tag">Draft only</span>
+                                        </div>
+                                        <p>{analysis.draft_reply}</p>
+                                      </div>
+                                      {selectedAction && (
+                                        <div className="approval-inline">
+                                          <div>
+                                            <ShieldCheck size={16} />
+                                            <strong>
+                                              {selectedAction.status === 'pending'
+                                                ? 'Ready for your review'
+                                                : `Action ${selectedAction.status}`}
+                                            </strong>
+                                          </div>
+                                          <p>
+                                            {selectedAction.status === 'pending'
+                                              ? 'Approval saves a local simulated CRM note. It does not send this reply to the customer.'
+                                              : 'See Approvals for the saved decision and connector result.'}
+                                          </p>
+                                          <button
+                                            className="button secondary full"
+                                            onClick={() => setView('approvals')}
+                                          >
+                                            Review proposed action <ArrowRight size={15} />
+                                          </button>
+                                        </div>
+                                      )}
+                                    </>
+                                  ) : (
+                                    <div className="analysis-empty">
+                                      <div className="investigation-diagram" aria-hidden="true">
+                                        <span>
+                                          <TicketIcon size={23} />
+                                        </span>
+                                        <i />
+                                        <span>
+                                          <BookOpen size={23} />
+                                        </span>
+                                        <i />
+                                        <span>
+                                          <ShieldCheck size={23} />
+                                        </span>
+                                      </div>
+                                      <div className="investigation-label">AWAITING ANALYSIS</div>
+                                      <h3>
+                                        Open the case.
+                                        <br />
+                                        Find the evidence.
+                                      </h3>
+                                      <p>
+                                        Analyze this ticket to retrieve relevant knowledge, assess
+                                        risk, and prepare a reviewable next step.
+                                      </p>
+                                      <div className="analysis-guarantees">
+                                        <span>
+                                          <Check size={13} />
+                                          Tenant-scoped sources
+                                        </span>
+                                        <span>
+                                          <Check size={13} />
+                                          Human approval
+                                        </span>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
                               </>
                             ) : tab === 'evidence' ? (
                               <>
@@ -890,25 +960,9 @@ function WorkspaceSession({ apiKey, onSwitch }: { apiKey: string; onSwitch: () =
                                 ? 'No external AI calls in demo mode'
                                 : 'Configured AI provider enabled'}
                             </span>
-                            <button
-                              className="button primary"
-                              disabled={!!busy || analysisLoading}
-                              onClick={() => {
-                                void analyze();
-                              }}
-                            >
-                              {busy === 'analyze' ? (
-                                <LoaderCircle size={15} className="spin" />
-                              ) : (
-                                <Sparkles size={15} />
-                              )}
-                              {busy === 'analyze'
-                                ? 'Analyzing…'
-                                : analysis
-                                  ? 'Reanalyze ticket'
-                                  : 'Analyze ticket'}
-                              {busy !== 'analyze' && <ArrowRight size={15} />}
-                            </button>
+                            <span className="footer-gate">
+                              <ShieldCheck size={14} /> Human approval required
+                            </span>
                           </div>
                         </>
                       ) : (

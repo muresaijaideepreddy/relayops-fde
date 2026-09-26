@@ -20,6 +20,17 @@ This repository models a **fictional customer engagement** from discovery throug
 
 ![RelayOps operations workbench](docs/screenshots/workbench.png)
 
+<details>
+<summary>Explore the interface</summary>
+
+![Inspectable analysis trace](docs/screenshots/trace.png)
+
+![Offline evaluation workspace](docs/screenshots/evaluations.png)
+
+[View the mobile layout](docs/screenshots/mobile.png)
+
+</details>
+
 ## What you can do
 
 - **Work a real application flow:** import JSON tickets, triage a queue, generate an analysis, inspect evidence and execution steps, review a draft, and approve or reject a simulated action.

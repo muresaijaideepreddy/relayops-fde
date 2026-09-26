@@ -4,7 +4,7 @@ An FDE portfolio project built around a fictional support-operations engagement,
 
 ## Included
 
-- React/TypeScript operations workbench: ticket queue, cited analysis, evidence, execution trace, approvals, knowledge, baseline evaluations and audit history.
+- React/TypeScript dispatch console: compact top navigation, graphite surfaces, lime action controls, ticket queue, cited analysis, evidence, execution trace, approvals, knowledge, baseline evaluations and audit history.
 - FastAPI application with tenant-scoped SQLAlchemy records, SQLite and PostgreSQL configuration, JSON ingestion, and replay-safe transactional approval.
 - Offline extractive analysis by default; opt-in OpenAI Responses integration with validated structured output and citation IDs.
 - Four read-only MCP tools with a stdio server, bounded inputs, structured outputs, fixed tenant credentials and protocol tests.
